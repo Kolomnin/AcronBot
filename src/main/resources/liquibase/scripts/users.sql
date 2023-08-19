@@ -6,6 +6,6 @@ create table tasks
 (
     id          serial primary key,
     chat_id     bigint,
-    date_time   timestamptz,
+    date_time   timestamp,
     description text
 )

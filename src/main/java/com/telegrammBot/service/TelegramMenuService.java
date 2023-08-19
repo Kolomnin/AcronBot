@@ -28,8 +28,8 @@ public class TelegramMenuService {
 
 
     public void sendWelcomeMessage(Long chatId) {
-        String message = "Добрый день! Вас приветсвует Телеграмм помощник " + ACRON_IT_HELPER + ". " +
-                "Выберите нужный пункт меню: ";
+        String message = "Добрый  день!  Вас  приветсвует  Телеграмм  помощник - " + ACRON_IT_HELPER + ". " +
+                "Выберите нужный пункт Главного меню: ";
         telegramBot.execute(new SendMessage(chatId, message));
     }
 
@@ -39,10 +39,7 @@ public class TelegramMenuService {
      *
      * @return
      */
-    public String instructionMenu() {
-        return "Здесь должны быть инструкции.";
 
-    }
 
     public String getCorporationDoc() {
         return "Здесь должны быть корпоративные документы или ссылки на них.";
