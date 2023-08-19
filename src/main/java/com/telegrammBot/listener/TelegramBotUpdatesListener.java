@@ -24,7 +24,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
     public static final String MENU_INSTRUCTION = "Меню для инструкций";
     public static final String CORP_DOC = "Получить корпоративные документы";
-    public static final String EMAIL_WEB = "Почта по веб-интерфейсу";
+    public static final String INSTRUCTION_1 = "Почта по веб-интерфейсу";
     public static final String TICKET_TO_IT = "Оставить заявку в ИТ";
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
@@ -90,9 +90,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     switch (data) {
 
                         case MENU_INSTRUCTION ->
-                                telegramBot.execute(new SendMessage(chatId, telegramMenuService.instructionMenu()));
+                            telegramBotService.instructionMenu(chatId);
+
                         case CORP_DOC ->
                                 telegramBot.execute(new SendMessage(chatId, telegramMenuService.getCorporationDoc()));
+
 
                     }
                 }
