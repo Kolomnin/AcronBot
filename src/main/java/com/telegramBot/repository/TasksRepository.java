@@ -1,6 +1,6 @@
-package com.telegrammBot.repository;
+package com.telegramBot.repository;
 
-import com.telegrammBot.entity.NotificationTask;
+import com.telegramBot.entity.NotificationTask;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

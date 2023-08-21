@@ -1,12 +1,12 @@
-package com.telegrammBot.SchedulerTasks;
+package com.telegramBot.SchedulerTasks;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.telegrammBot.entity.NotificationTask;
+import com.telegramBot.entity.NotificationTask;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.telegrammBot.repository.TasksRepository;
+import com.telegramBot.repository.TasksRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

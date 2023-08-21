@@ -1,4 +1,4 @@
-package com.telegrammBot.service;
+package com.telegramBot.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -27,9 +27,10 @@ public class TelegramMenuService {
      */
 
 
-    public void sendWelcomeMessage(Long chatId) {
-        String message = "Добрый  день!  Вас  приветсвует  Телеграмм  помощник - " + ACRON_IT_HELPER + ". " +
-                "Выберите нужный пункт Главного меню: ";
+    public void sendWelcomeMessage(Long chatId, String firstName) {
+
+        String message = "Привет, " + firstName + "!  Тебя  приветсвует  Телеграмм  помощник - " + ACRON_IT_HELPER + ". " +
+                "Выбери нужный пункт Главного меню: ";
         telegramBot.execute(new SendMessage(chatId, message));
     }
 
@@ -50,4 +51,7 @@ public class TelegramMenuService {
         public String getLinkTicketToIt () {
             return "Здесь должен быть реализован функционал перехода по ссылке https://itsm.acron.ru/sd/operator";
         }
+
+
+
     }

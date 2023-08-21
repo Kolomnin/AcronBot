@@ -1,4 +1,4 @@
-package com.telegrammBot.entity;
+package com.telegramBot.entity;
 
 import com.vdurmont.emoji.EmojiParser;
 

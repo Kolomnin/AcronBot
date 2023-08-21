@@ -1,4 +1,4 @@
-package com.telegrammBot.configuration;
+package com.telegramBot.configuration;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.DeleteMyCommands;

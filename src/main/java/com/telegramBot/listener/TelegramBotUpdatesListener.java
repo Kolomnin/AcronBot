@@ -1,16 +1,16 @@
-package com.telegrammBot.listener;
+package com.telegramBot.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.telegrammBot.service.TelegramBotService;
-import com.telegrammBot.service.TelegramMenuService;
+import com.telegramBot.service.TelegramBotService;
+import com.telegramBot.service.TelegramMenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import com.telegrammBot.repository.TasksRepository;
+import com.telegramBot.repository.TasksRepository;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
@@ -34,7 +34,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final TelegramMenuService telegramMenuService;
     private final TelegramBotService telegramBotService;
 
-    private TelegramBotUpdatesListener(TelegramBot telegramBot, TasksRepository repository, TelegramMenuService telegramMenuService, TelegramBotService telegramBotService) {
+    private TelegramBotUpdatesListener(TelegramBot telegramBot, TasksRepository repository,
+                                       TelegramMenuService telegramMenuService,
+                                       TelegramBotService telegramBotService) {
         this.telegramBot = telegramBot;
         this.repository = repository;
         this.telegramMenuService = telegramMenuService;
@@ -73,7 +75,8 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                     Matcher matcher = matchMessage(update);
                     if (START.equals(message) || matcher.matches()) {
-                        telegramMenuService.sendWelcomeMessage(chatId);
+                        String firstName = update.message().from().firstName();
+                        telegramMenuService.sendWelcomeMessage(chatId, firstName);
                         telegramBotService.firstMenu(chatId);
                     } else {
                         telegramBot.execute(new SendMessage(update.message().chat().id(), "Неверный формат, для " +
@@ -111,4 +114,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         Pattern pattern = Pattern.compile("([\\d\\\\.:\\s]{16})(\\s)([А-яA-z\\s\\d]+)");
         return pattern.matcher(update.message().text());
     }
+
+
+
 }

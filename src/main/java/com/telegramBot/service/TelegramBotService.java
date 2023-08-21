@@ -1,14 +1,14 @@
-package com.telegrammBot.service;
+package com.telegramBot.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
 import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
-import com.telegrammBot.entity.Icon;
+import com.telegramBot.entity.Icon;
 import org.springframework.stereotype.Service;
 
-import static com.telegrammBot.listener.TelegramBotUpdatesListener.CORP_DOC;
-import static com.telegrammBot.listener.TelegramBotUpdatesListener.MENU_INSTRUCTION;
+import static com.telegramBot.listener.TelegramBotUpdatesListener.CORP_DOC;
+import static com.telegramBot.listener.TelegramBotUpdatesListener.MENU_INSTRUCTION;
 
 
 @Service
@@ -71,7 +71,11 @@ public class TelegramBotService {
         telegramBot.execute(helloMessage);
     }
 
-    // Необходимо создать метод для вызова: 1. меню с инструкциями;
-    //                                      2. Корпоративные док-ты;
+    /**   Необходимо создать метод для вызова: 1. меню с инструкциями;
+     *                                         2. Корпоративные док-ты;
+     *                                         3. Меню команд в боте;
+     *                                         4. выдача pdf файла с инструкциями;
+     *                                         5. Приветствие c именем кто пользуетсят ботом.
+     */
 
 }
