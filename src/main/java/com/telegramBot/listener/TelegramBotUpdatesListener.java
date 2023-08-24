@@ -2,45 +2,54 @@ package com.telegramBot.listener;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
+import com.pengrad.telegrambot.model.BotCommand;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.request.SetMyCommands;
 import com.telegramBot.service.TelegramBotService;
 import com.telegramBot.service.TelegramMenuService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import com.telegramBot.repository.TasksRepository;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
     public final String START = "/start";
+    public final String startText = " Начало работы с ботом";
+    public final String MAIN_MENU = "/menu";
+    public final String mainMenuText = "Вернуться в Главное меню";
 
     public static final String MENU_INSTRUCTION = "Меню для инструкций";
-    public static final String CORP_DOC = "Получить корпоративные документы";
-    public static final String INSTRUCTION_1 = "Почта по веб-интерфейсу";
+    public static final String CORP_DOC = "Корпоративные документы";
+
+    public static final String invalidMessageFormat = "Неверный формат, для начала работы с ботом напишите /start";
+    public static final String errorMessageText = "Извините, но я умею обрабатывать только текст.";
     public static final String TICKET_TO_IT = "Оставить заявку в ИТ";
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
-
     private final TelegramBot telegramBot;
-    private final TasksRepository repository;
     private final TelegramMenuService telegramMenuService;
     private final TelegramBotService telegramBotService;
 
-    private TelegramBotUpdatesListener(TelegramBot telegramBot, TasksRepository repository,
+    private TelegramBotUpdatesListener(TelegramBot telegramBot,
                                        TelegramMenuService telegramMenuService,
                                        TelegramBotService telegramBotService) {
         this.telegramBot = telegramBot;
-        this.repository = repository;
         this.telegramMenuService = telegramMenuService;
         this.telegramBotService = telegramBotService;
+
+        telegramBot.execute(new SetMyCommands(
+                new BotCommand(START, startText),
+                new BotCommand(MAIN_MENU, mainMenuText)
+        ));
     }
 
     Long chatId;
@@ -67,8 +76,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             || update.message().audio() != null
                             || update.message().document() != null
                             || update.message().animation() != null) {
-                        SendMessage errorMessage = new SendMessage(update.message().chat().id(), "Извините, но я "
-                                + "умею обрабатывать только текст.");
+                        SendMessage errorMessage = new SendMessage(update.message().chat().id(), errorMessageText);
                         telegramBot.execute(errorMessage);
                         return;
                     }
@@ -78,9 +86,12 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         String firstName = update.message().from().firstName();
                         telegramMenuService.sendWelcomeMessage(chatId, firstName);
                         telegramBotService.firstMenu(chatId);
+
+                    } else if (MAIN_MENU.equals(message) || matcher.matches()) {
+                        telegramBotService.firstMenu(chatId);
+
                     } else {
-                        telegramBot.execute(new SendMessage(update.message().chat().id(), "Неверный формат, для " +
-                                "начала работы с ботом напишите /start"));
+                        telegramBot.execute(new SendMessage(update.message().chat().id(), invalidMessageFormat));
                     }
                 }
 
@@ -92,11 +103,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
 
                     switch (data) {
 
-                        case MENU_INSTRUCTION ->
-                            telegramBotService.instructionMenu(chatId);
+                        case MENU_INSTRUCTION -> telegramBotService.instructionMenu(chatId);
 
                         case CORP_DOC ->
                                 telegramBot.execute(new SendMessage(chatId, telegramMenuService.getCorporationDoc()));
+
 
 
                     }
@@ -105,6 +116,7 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
             });
 
         } catch (RuntimeException e) {
+            System.out.println("Something went wrong: " + e);
             e.printStackTrace();
         }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
@@ -114,7 +126,4 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         Pattern pattern = Pattern.compile("([\\d\\\\.:\\s]{16})(\\s)([А-яA-z\\s\\d]+)");
         return pattern.matcher(update.message().text());
     }
-
-
-
 }

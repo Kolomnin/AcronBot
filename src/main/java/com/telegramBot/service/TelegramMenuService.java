@@ -2,6 +2,7 @@ package com.telegramBot.service;
 
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.telegramBot.entity.Icon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class TelegramMenuService {
 
     private final Logger logger = LoggerFactory.getLogger(TelegramMenuService.class);
 
-    private static final String ACRON_IT_HELPER = "Acron_IT_helper";
+//    private static final String ACRON_IT_HELPER = "Acron_IT_helper";
 
     public TelegramMenuService(TelegramBot telegramBot) {
         this.telegramBot = telegramBot;
@@ -29,8 +30,10 @@ public class TelegramMenuService {
 
     public void sendWelcomeMessage(Long chatId, String firstName) {
 
-        String message = "Привет, " + firstName + "!  Тебя  приветсвует  Телеграмм  помощник - " + ACRON_IT_HELPER + ". " +
-                "Выбери нужный пункт Главного меню: ";
+        String message = "Привет, " + firstName + "!  " + Icon.SMILE.get() + "\n" + "\nЯ  твой  " +
+                "IT-помощник.  Здесь  собран  \nсписок ответов  на  часто  задаваемые \nвопросы, чтобы" +
+                " ты мог быстрее найти \nдля  себя  нужную  информацию.";
+
         telegramBot.execute(new SendMessage(chatId, message));
     }
 
@@ -51,7 +54,5 @@ public class TelegramMenuService {
         public String getLinkTicketToIt () {
             return "Здесь должен быть реализован функционал перехода по ссылке https://itsm.acron.ru/sd/operator";
         }
-
-
 
     }

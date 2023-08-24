@@ -6,9 +6,10 @@ public enum Icon {
     CLIPBOARD(":clipboard:"),
     DOC(":open_file_folder:"),
     TOPHAT(":tophat:"),
-    EMAIL(":email: :e-mail:"),
+    EMAIL(":email:"),
     SOS(":sos:"),
-    FLAG(":checkered_flag:");
+    SMILE(":hugging:");
+
 
     private String value;
 
@@ -20,3 +21,5 @@ public enum Icon {
         this.value = value;
     }
 }
+
+
