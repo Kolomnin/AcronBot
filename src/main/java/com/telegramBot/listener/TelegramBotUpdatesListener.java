@@ -18,21 +18,16 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.telegramBot.entity.Commands.*;
+
 
 @Service
 public class TelegramBotUpdatesListener implements UpdatesListener {
 
-    public final String START = "/start";
-    public final String startText = " Начало работы с ботом";
-    public final String MAIN_MENU = "/menu";
-    public final String mainMenuText = "Вернуться в Главное меню";
-
-    public static final String MENU_INSTRUCTION = "Меню для инструкций";
-    public static final String CORP_DOC = "Корпоративные документы";
-
-    public static final String invalidMessageFormat = "Неверный формат, для начала работы с ботом напишите /start";
-    public static final String errorMessageText = "Извините, но я умею обрабатывать только текст.";
-    public static final String TICKET_TO_IT = "Оставить заявку в ИТ";
+    private final String INSTRUCTION = "Меню для инструкций";
+    private final String DOC = "Корпоративные документы";
+    private final String PASS = "Смена пароля";
+    private final String CHANGE_PASS_BR = "Смена пароля через браузер";
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
@@ -47,8 +42,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         this.telegramBotService = telegramBotService;
 
         telegramBot.execute(new SetMyCommands(
-                new BotCommand(START, startText),
-                new BotCommand(MAIN_MENU, mainMenuText)
+                new BotCommand(START.getValue(), START_TEXT.getValue()),
+                new BotCommand(MAIN_MENU.getValue(), MAIN_MENU_TEXT.getValue()),
+                new BotCommand(INFO.getValue(), INFO_TEXT.getValue())
         ));
     }
 
@@ -76,22 +72,32 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                             || update.message().audio() != null
                             || update.message().document() != null
                             || update.message().animation() != null) {
-                        SendMessage errorMessage = new SendMessage(update.message().chat().id(), errorMessageText);
+                        SendMessage errorMessage = new SendMessage(update.message().chat().id(),
+                                ERROR_MESSAGE_TEXT.getValue());
                         telegramBot.execute(errorMessage);
                         return;
                     }
+                    /**
+                     * Функционал кнопки Меню
+                     * Провека Reg-Ex;
+                     * Кнопки старт, главное меню, информация;
+                     */
 
                     Matcher matcher = matchMessage(update);
-                    if (START.equals(message) || matcher.matches()) {
+                    if (START.getValue().equals(message) || matcher.matches()) {
                         String firstName = update.message().from().firstName();
                         telegramMenuService.sendWelcomeMessage(chatId, firstName);
                         telegramBotService.firstMenu(chatId);
 
-                    } else if (MAIN_MENU.equals(message) || matcher.matches()) {
+                    } else if (MAIN_MENU.getValue().equals(message) || matcher.matches()) {
                         telegramBotService.firstMenu(chatId);
 
+                    } else if (INFO.getValue().equals(message) || matcher.matches()) {
+                        telegramMenuService.info(chatId);
+
                     } else {
-                        telegramBot.execute(new SendMessage(update.message().chat().id(), invalidMessageFormat));
+                        telegramBot.execute(new SendMessage(update.message().chat().id(),
+                                INVALID_MESSAGE_FORMAT.getValue()));
                     }
                 }
 
@@ -102,22 +108,17 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     String data = callbackQuery.data();
 
                     switch (data) {
-
-                        case MENU_INSTRUCTION -> telegramBotService.instructionMenu(chatId);
-
-                        case CORP_DOC ->
-                                telegramBot.execute(new SendMessage(chatId, telegramMenuService.getCorporationDoc()));
-
-
-
+                        case INSTRUCTION -> telegramBotService.instructionMenu(chatId);
+                        case DOC -> telegramMenuService.getCorporationDoc(chatId);
+                        case PASS -> telegramBotService.changePassMenu(chatId);
+                        case CHANGE_PASS_BR -> telegramMenuService.changePass(update);
                     }
                 }
-
             });
 
         } catch (RuntimeException e) {
             System.out.println("Something went wrong: " + e);
-            e.printStackTrace();
+
         }
         return UpdatesListener.CONFIRMED_UPDATES_ALL;
     }
