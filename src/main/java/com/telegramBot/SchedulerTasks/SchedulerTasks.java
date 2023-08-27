@@ -3,10 +3,9 @@ package com.telegramBot.SchedulerTasks;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.request.SendMessage;
 import com.telegramBot.entity.NotificationTask;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.telegramBot.repository.TasksRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import com.telegramBot.repository.TasksRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,11 +16,12 @@ import java.util.Collection;
 @Component
 public class SchedulerTasks {
 
-    @Autowired
     private TasksRepository repository;
-
-    @Autowired
     private TelegramBot telegramBot;
+    public SchedulerTasks(TasksRepository repository, TelegramBot telegramBot) {
+        this.repository = repository;
+        this.telegramBot = telegramBot;
+    }
 
     @Scheduled(cron = "0 0/1 * * * *")
     public void run() {

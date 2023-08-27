@@ -28,6 +28,11 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
     private final String DOC = "Корпоративные документы";
     private final String PASS = "Смена пароля";
     private final String CHANGE_PASS_BR = "Смена пароля через браузер";
+    private final String CHANGE_CURRENT_PASS = "Смена текущего пароля";
+    private final String CHANGE_PASSWD_VPN = "Смена пароля VPN";
+    private final String INSTRUCTION_IOS = "Инструкция IOS";
+    private final String INSTRUCTION_ANDROID = "Инструкция Android";
+    private final String MAIL_ARCHIVE = "Архивирование почты";
 
     private final Logger logger = LoggerFactory.getLogger(TelegramBotUpdatesListener.class);
     private final TelegramBot telegramBot;
@@ -42,9 +47,9 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
         this.telegramBotService = telegramBotService;
 
         telegramBot.execute(new SetMyCommands(
-                new BotCommand(START.getValue(), START_TEXT.getValue()),
-                new BotCommand(MAIN_MENU.getValue(), MAIN_MENU_TEXT.getValue()),
-                new BotCommand(INFO.getValue(), INFO_TEXT.getValue())
+                new BotCommand(BUTTON_START.getValue(), START_TEXT.getValue()),
+                new BotCommand(BUTTON_MAIN_MENU.getValue(), MAIN_MENU_TEXT.getValue()),
+                new BotCommand(BUTTON_INFO.getValue(), INFO_TEXT.getValue())
         ));
     }
 
@@ -80,19 +85,19 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                     /**
                      * Функционал кнопки Меню
                      * Провека Reg-Ex;
-                     * Кнопки старт, главное меню, информация;
+                     * Кнопки старт, Главное меню, информация;
                      */
 
                     Matcher matcher = matchMessage(update);
-                    if (START.getValue().equals(message) || matcher.matches()) {
+                    if (BUTTON_START.getValue().equals(message) || matcher.matches()) {
                         String firstName = update.message().from().firstName();
                         telegramMenuService.sendWelcomeMessage(chatId, firstName);
                         telegramBotService.firstMenu(chatId);
 
-                    } else if (MAIN_MENU.getValue().equals(message) || matcher.matches()) {
+                    } else if (BUTTON_MAIN_MENU.getValue().equals(message) || matcher.matches()) {
                         telegramBotService.firstMenu(chatId);
 
-                    } else if (INFO.getValue().equals(message) || matcher.matches()) {
+                    } else if (BUTTON_INFO.getValue().equals(message) || matcher.matches()) {
                         telegramMenuService.info(chatId);
 
                     } else {
@@ -111,7 +116,13 @@ public class TelegramBotUpdatesListener implements UpdatesListener {
                         case INSTRUCTION -> telegramBotService.instructionMenu(chatId);
                         case DOC -> telegramMenuService.getCorporationDoc(chatId);
                         case PASS -> telegramBotService.changePassMenu(chatId);
-                        case CHANGE_PASS_BR -> telegramMenuService.changePass(update);
+                        case CHANGE_PASS_BR -> telegramMenuService.changePass(chatId);
+                        case CHANGE_CURRENT_PASS -> telegramMenuService.changeCurrentPass(chatId);
+                        case CHANGE_PASSWD_VPN -> telegramMenuService.changePassVpn(chatId);
+                        case INSTRUCTION_IOS -> telegramMenuService.mailSettingsIos(chatId);
+                        case INSTRUCTION_ANDROID ->telegramMenuService.mailSettingsAndroid(chatId);
+                        case MAIL_ARCHIVE -> telegramMenuService.mailArchiveSettings(chatId);
+                        default -> telegramBotService.massageWrong(chatId);
                     }
                 }
             });
