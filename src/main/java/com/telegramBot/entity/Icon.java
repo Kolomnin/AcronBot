@@ -8,7 +8,8 @@ public enum Icon {
     TOPHAT(":tophat:"),
     EMAIL(":email:"),
     SOS(":sos:"),
-    SMILE(":hugging:");
+    SMILE(":hugging:"),
+    GREEN_MARK(":white_check_mark:");
 
 
     private final String value;
