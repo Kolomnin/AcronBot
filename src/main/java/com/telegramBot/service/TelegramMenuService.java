@@ -25,13 +25,7 @@ public class TelegramMenuService {
         this.telegramBot = telegramBot;
     }
 
-    /**
-     * Метод, который выводит приветственное сообщение и предлагает выбрать дальнейшие действия
-     *
-     * @param chatId
-     */
-
-
+   
     public void sendWelcomeMessage(Long chatId, String firstName) {
 
         String message = "Привет, " + firstName + "!  " + Icon.SMILE.get() + "\n" + "\nЯ  твой  " +
@@ -41,12 +35,7 @@ public class TelegramMenuService {
         telegramBot.execute(new SendMessage(chatId, message));
     }
 
-    /**
-     * Метод для пользователя, который впервые в нашем приюте.
-     * Метод предлагает выбрать дальнейшие действия.
-     */
-
-
+   
     public void getCorporationDoc(Long chatId) {
 
         String messageDoc = "Здесь должны быть корпоративные документы или ссылки на них. Этап согласовывается.";
